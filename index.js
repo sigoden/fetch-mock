@@ -1,47 +1,38 @@
-const fetchMock = require("@sigodenjs/fetch-mock-base");
+const pathToRegexp = require("path-to-regexp");
 const urlParse = require("url-parse");
-
 const routeParse = require("path-match")({
   sensitive: false,
   strict: false,
   end: false
 });
 
-exports.default = exports.setupMock;
+const store = [];
+global._fetch = global.fetch;
 
-exports.setupMock = function(mocks) {
+function setupMock(mocks) {
   for (let route in mocks) {
     const mockData = mocks[route];
-    const options = { method: "get" };
     const rMathes = /^(GET|PUT|POST|DELETE) /i.exec(route);
-    let matcher = route;
+    let method = "get";
     if (rMathes) {
-      const method = rMathes[0].toLowerCase().trim();
-      options.method = method;
+      method = rMathes[0].toLowerCase().trim();
       route = route.slice(method.length).trim();
-      matcher = route;
-    }
-    if (/^\//.test(route)) {
-      matcher = `express:${route}`;
     }
     if (typeof mockData === "function") {
-      fetchMock.mock(matcher, (url, opts) => {
-        return async () => {
-          const res = createRes();
-          await mockData(createReq(url, opts, route), res);
-          return retriveRes(res);
-        };
+      addMock(method, route, async fetchOpts => {
+        const res = createRes();
+        await mockData(createReq(fetchOpts, route), res);
+        return retriveRes(res);
       });
     } else {
-      fetchMock.mock(matcher, mockData);
+      addMock(method, route, async () => ({ body: mockData }));
     }
   }
-};
+}
 
-function createReq(url, opts, pattern) {
-  const { params, query } = parseUrl(url, pattern);
-  return Object.assign({}, opts, {
-    url,
+function createReq(fetchOpts, pattern) {
+  const { params, query } = parseUrl(fetchOpts.url, pattern);
+  return Object.assign({}, fetchOpts, {
     params,
     query
   });
@@ -67,9 +58,70 @@ function retriveRes(res) {
   };
 }
 
+function addMock(method, route, createRes) {
+  store.push([createMatcher(method, route), createRes]);
+}
+
+function polyfill(f = global.fetch) {
+  global._fetch = f;
+  global.fetch = fetch;
+}
+
+async function fetch(url, opts = {}) {
+  if (typeof url === "string") {
+    opts.url = url;
+  }
+  const [isMock, mockData] = await lookupMock(opts);
+  if (isMock) {
+    const { status, body, headers } = mockData;
+    return {
+      status,
+      body,
+      headers,
+      json: async () => {
+        return body;
+      },
+      text: async () => {
+        return JSON.stringify(body);
+      }
+    };
+  }
+  return global._fetch(opts);
+}
+
+async function lookupMock(fetchOpts) {
+  for (let item of store) {
+    const [match, createRes] = item;
+    if (match(fetchOpts)) {
+      return [true, await createRes(fetchOpts)];
+    }
+  }
+  return [false, null];
+}
+
+function createMatcher(method, route) {
+  let matchRoute = target => route === target;
+  if (/\/:/.test(route)) {
+    matchRoute = target => pathToRegexp(route).test(target);
+  }
+  return fetchOpts => {
+    const fetchMethod = fetchOpts.method || "get";
+    if (fetchMethod !== method) {
+      return false;
+    }
+    if (!matchRoute(fetchOpts.url)) {
+      return false;
+    }
+    return true;
+  };
+}
+
 function parseUrl(url, pattern) {
   const urlObj = urlParse(url, true);
   const { pathname, query } = urlObj;
   const params = routeParse(pattern)(pathname);
   return { params, query };
 }
+
+exports.polyfill = polyfill;
+exports.setupMock = exports.default = setupMock;

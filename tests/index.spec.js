@@ -1,10 +1,10 @@
-const { setupMock } = require("../index");
+const { setupMock, polyfill } = require("../index");
 const fetch = require("node-fetch");
 const mocks = require("./fixtures/mock");
 const api = require("./fixtures/api");
 
 beforeAll(() => {
-  global.fetch = fetch;
+  polyfill(fetch);
   setupMock(mocks);
 });
 

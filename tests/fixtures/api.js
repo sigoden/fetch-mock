@@ -4,7 +4,7 @@ async function queryMessage() {
 
 async function createName() {
   return request("/api/name", {
-    method: "post"
+    method: "put"
   });
 }
 
