@@ -5,12 +5,12 @@
 - 安装
 
 ```
-npm i @sigodenjs/fetch-embeded-mock
+npm i @sigodenjs/mock-fetch
 ```
 
 - 编写 mock
 
-新建 mock 文件 `./mock/api.js`
+新建 mock 文件 `./mocks.js`
 
 ```js
 import mockjs from 'mockjs';
@@ -30,10 +30,10 @@ export default {
 - 引入
 
 ```js
-import setupMock, { load } from "@sigodnejs/fetch-mock"
+import * as mock from "@sigodnejs/fetch-mock"
+import mocks  from from "./mocks"
 
-const mocks = load("./mock"); # 从 mock 目录加载所有 mock
-setupMock(mocks);
+mock(mocks); // 注入 mock
 ```
 
 - 结果

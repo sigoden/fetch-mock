@@ -1,11 +1,10 @@
-const { setupMock, polyfill } = require("../index");
+const mock = require("../index");
 const fetch = require("node-fetch");
 const mocks = require("./fixtures/mock");
 const api = require("./fixtures/api");
 
 beforeAll(() => {
-  polyfill(fetch);
-  setupMock(mocks);
+  mock(mocks, fetch);
 });
 
 test("mock plain object", async () => {

@@ -9,7 +9,8 @@ const routeParse = require("path-match")({
 const store = [];
 global._fetch = global.fetch;
 
-function setupMock(mocks) {
+function mock(mocks, globalFetch = global.fetch) {
+  polyfill(globalFetch);
   for (let route in mocks) {
     const mockData = mocks[route];
     const rMathes = /^(GET|PUT|POST|DELETE) /i.exec(route);
@@ -123,5 +124,4 @@ function parseUrl(url, pattern) {
   return { params, query };
 }
 
-exports.polyfill = polyfill;
-exports.setupMock = exports.default = setupMock;
+module.exports = mock;
