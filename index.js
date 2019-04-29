@@ -7,7 +7,9 @@ const routeParse = require("path-match")({
   end: false
 });
 
-exports.setupMock = exports.default = function(mocks) {
+exports.default = exports.setupMock;
+
+exports.setupMock = function(mocks) {
   for (let route in mocks) {
     const mockData = mocks[route];
     const options = { method: "get" };
@@ -71,11 +73,3 @@ function parseUrl(url, pattern) {
   const params = routeParse(pattern)(pathname);
   return { params, query };
 }
-
-exports.load = function(folder) {
-  return (ctx => {
-    let keys = ctx.keys();
-    let values = keys.map(ctx);
-    return keys.reduce((o, _, i) => Object.assign(o, values[i]), {});
-  })(require.context(folder, true, /\.js$/));
-};
