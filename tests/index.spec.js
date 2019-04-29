@@ -1,4 +1,4 @@
-const { setupMock } = require('../index');
+const { setupMock } = require("../index");
 const fetch = require("node-fetch");
 const mocks = require("./fixtures/mock");
 const api = require("./fixtures/api");

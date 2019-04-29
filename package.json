@@ -1,11 +1,14 @@
 {
   "name": "@sigodenjs/fetch-mock",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publishConfig": {
     "access": "public"
   },
   "main": "index.js",
-  "keywords": ["mock", "fetch"],
+  "keywords": [
+    "mock",
+    "fetch"
+  ],
   "homepage": "https://github.com/sigoden/fetch-mock",
   "bugs": {
     "url": "https://github.com/sigoden/fetch-mock/issues"
@@ -20,6 +23,7 @@
   },
   "license": "MIT",
   "scripts": {
+    "lint": "eslint --fix .",
     "test": "jest"
   },
   "dependencies": {
@@ -28,8 +32,12 @@
     "qs": "^6.7.0"
   },
   "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-prettier": "^4.2.0",
+    "eslint-plugin-prettier": "^3.0.1",
     "jest": "^24.7.1",
     "mockjs": "^1.0.1-beta3",
-    "node-fetch": "^2.4.1"
+    "node-fetch": "^2.4.1",
+    "prettier": "^1.17.0"
   }
 }

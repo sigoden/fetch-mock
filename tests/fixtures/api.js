@@ -1,14 +1,14 @@
-async function queryMessage()  {
+async function queryMessage() {
   return request("/api/message");
 }
 
-async function createName()  {
+async function createName() {
   return request("/api/name", {
     method: "post"
   });
 }
 
-async function updateModel(id)  {
+async function updateModel(id) {
   return request(`/api/model/${id}`, {
     method: "post"
   });
@@ -21,5 +21,5 @@ async function request(url, opts = {}) {
 module.exports = {
   queryMessage,
   createName,
-  updateModel,
-}
+  updateModel
+};
