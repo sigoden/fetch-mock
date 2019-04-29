@@ -1,4 +1,4 @@
-const fetchMock = require("fetch-mock");
+const fetchMock = require("@sigodenjs/fetch-mock-base");
 const urlParse = require("url-parse");
 
 const routeParse = require("path-match")({
