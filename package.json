@@ -1,6 +1,6 @@
 {
   "name": "@sigodenjs/fetch-mock",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "publishConfig": {
     "access": "public"
   },
@@ -29,7 +29,8 @@
   "dependencies": {
     "fetch-mock": "^7.3.3",
     "path-match": "^1.2.4",
-    "qs": "^6.7.0"
+    "qs": "^6.7.0",
+    "url-parse": "^1.4.7"
   },
   "devDependencies": {
     "eslint": "^5.16.0",

@@ -1,6 +1,5 @@
 const fetchMock = require("fetch-mock");
-const qsParse = require("qs").parse;
-const urlParse = require("url").parse;
+const urlParse = require("url-parse");
 
 const routeParse = require("path-match")({
   sensitive: false,
@@ -67,10 +66,10 @@ function retriveRes(res) {
 }
 
 function parseUrl(url, pattern) {
-  const urlObj = urlParse(url);
+  const urlObj = urlParse(url, true);
   const { pathname, query } = urlObj;
   const params = routeParse(pattern)(pathname);
-  return { params, query: qsParse(query) };
+  return { params, query };
 }
 
 exports.load = function(folder) {
