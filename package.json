@@ -1,19 +1,21 @@
 {
-  "name": "embed-mock",
-  "version": "1.0.0",
-  "description": "",
+  "name": "@sigodenjs/fetch-mock",
+  "version": "0.1.0",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "scripts": {
+    "test": "jest"
+  },
   "dependencies": {
-    "mockjs": "^1.0.1-beta3",
-    "umi-request": "^1.0.7"
+    "fetch-mock": "^7.3.3",
+    "path-match": "^1.2.4",
+    "qs": "^6.7.0"
   },
   "devDependencies": {
-    "fetch-mock": "^7.3.3"
+    "jest": "^24.7.1",
+    "mockjs": "^1.0.1-beta3",
+    "node-fetch": "^2.4.1"
   }
 }
